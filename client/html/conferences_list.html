@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/css/conferences_list.css" />
+        <link
+            rel="stylesheet"
+            href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"
+        />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="js/conferences_list.js"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <!-- INTRODUCTION -->
+        <div class="about-section">
+            <h1 class="title">Best Conference</h1>
+            <p>Add your conferences & lecture</p>
+        </div>
+
+        <h2 class="title" style="text-align: center">Conferences List</h2>
+
+        <!-- THE MAIN CONTENT -->
+        <center>
+            <p><button class="add_conf">Add Conferences</button></p>
+            <p>
+                <select class="select">
+                    <option value="Sort by">Sort by</option>
+                    <option value="date">date</option>
+                    <option value="name">name</option>
+                </select>
+            </p>
+            <div id="conferences_list"></div>
+            <div id="lecture_list"></div>
+            <p><button class="add_conf">Add Conferences</button></p>
+        </center>
+
+        <!-- MODAL OF THE FORM -->
+        <div id="myModal" class="modal" role="dialog" tabindex="-1">
+            <span class="close">&times;</span>
+            <div id="parent_form" class="col-sm-6 col-sm-offset-3">
+                <h1 class="title">add new conferences</h1>
+
+                <!-- OUR FORM -->
+                <form id="conference_form" name="conference_form" method="POST">
+                    <!-- ID -->
+                    <div id="name-group" class="form-group">
+                        <label for="id">ID</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="id_field"
+                            id="id_field"
+                            placeholder="write id here"
+                            required
+                        />
+                        <!-- errors will go here -->
+                    </div>
+
+                    <!-- NAME -->
+                    <div id="name-group" class="form-group">
+                        <label for="name">Name</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="name"
+                            id="name"
+                            placeholder="write name here"
+                            required
+                        />
+                        <!-- errors will go here -->
+                    </div>
+
+                    <!-- profession -->
+                    <div id="name-group" class="form-group">
+                        <label for="img">logo picture</label>
+                        <input
+                            type="url"
+                            class="form-control"
+                            name="img_url"
+                            id="img_url"
+                            placeholder="write url's logo picture"
+                        />
+                        <!-- errors will go here -->
+                    </div>
+
+                    <div id="name-group" class="form-group">
+                        <label for="name">director</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="director"
+                            id="director"
+                            placeholder="write director's name here"
+                            required
+                        />
+                        <!-- errors will go here -->
+                    </div>
+
+                    <div id="name-group" class="form-group">
+                        <label for="name">date</label>
+                        <input
+                            type="date"
+                            class="form-control"
+                            name="date"
+                            id="date"
+                            placeholder="write date here"
+                            required
+                        />
+                        <!-- errors will go here -->
+                    </div>
+
+                    <div
+                        id="isSeries"
+                        name="isSeries"
+                        placeholder="chose true/false"
+                        required
+                    >
+                        <label for="name">isSeries</label>
+                        <input
+                            type="radio"
+                            name="add_is_series"
+                            id="is_series_true"
+                            value="true"
+                        />
+                        <label for="btn_add_is_series">True</label>
+                        <input
+                            type="radio"
+                            name="add_is_series"
+                            id="is_series_false"
+                            value="false"
+                        />
+                        <label for="btn_add_is_series">False</label> 
+              
+                    </div>
+
+                    <div id="series_number_wrapper" class="form-group">
+                        <label for="name">series_number</label>
+                        <input
+                            type="number"
+                            min="2"
+                            class="form-control"
+                            name="add_series_number"
+                            id="series_number"
+                            placeholder="write the numbers of meeting"
+                            required
+                        />
+                        <!-- errors will go here -->
+                    </div>
+                    <button id="submit" type="submit" class="btn btn-success">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+<!-- edit_conference_form -->
+        <div
+            class="modal fade"
+            id="editConferenseModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="editConferenseModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editConferenseModalLabel">
+                            Edit Conference
+                        </h5>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="edit_conference_form" name="edit_conference_form">
+                        <div class="modal-body">
+                            <!-- NAME -->
+                            <div id="name-group" class="form-group">
+                                <label for="name">Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="edit_name"
+                                    id="edit_name"
+                                    placeholder="write name here"
+                                
+                                />
+                                <!-- errors will go here -->
+                            </div>
+
+                            <!-- profession -->
+                            <div id="name-group" class="form-group">
+                                <label for="img">Logo picture</label>
+                                <input
+                                    type="url"
+                                    class="form-control"
+                                    name="img_url"
+                                    id="edit_img_url"
+                                    placeholder="write url's logo picture"
+                                />
+                                <!-- errors will go here -->
+                            </div>
+
+                            <div id="name-group" class="form-group">
+                                <label for="name">Director</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="edit_director"
+                                    id="edit_director"
+                                    placeholder="write director's name here"
+                                    
+                                />
+                                <!-- errors will go here -->
+                            </div>
+
+                            <div id="name-group" class="form-group">
+                                <label for="name">Date</label>
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    name="edit_date"
+                                    id="edit_date"
+                                    placeholder="write date here"
+                                />
+                                <!-- errors will go here -->
+                            </div>
+
+                            <div
+                            id="isSeries"
+                            name="edit_isSeries"
+                            placeholder="chose true/false"
+                            
+                        >
+                            <label for="name">isSeries</label>
+                            <input
+                                type="radio"
+                                name="edit_is_series"
+                                id="edit_is_series_true"
+                                value="true"
+                            />
+                            <label for="btn_edit_isSeries_true">True</label>
+                            <input
+                                type="radio"
+                                name="edit_is_series"
+                                id="edit_is_series_false"
+                                value="false"
+                            />
+                            <label for="btn_edit_isSeries_false">False</label> 
+                            </div>
+
+                            <div id="edit_series_number_wrapper" class="form-group">
+                                <label for="name">series_number</label>
+                                <input
+                                id="edit_series_number"
+                                    type="number"
+                                    class="form-control"
+                                    name="series_number"
+                                    min="2"                                    
+                                    placeholder="write the numbers of meeting"
+                                    
+                                />
+                                <!-- errors will go here -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                                id="btn_close_edit_modal"
+                            >
+                                Close
+                            </button>
+                            <button
+                            type="submit"
+                                id="edit_form_submit"
+                                class="btn btn-primary"
+                            >
+                                Save changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
