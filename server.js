@@ -3,6 +3,10 @@ const express = require('express'),
     path = require('path'),
     fs = require('fs')
     //routers = require('./server/routes/routes.js');
+    require('./src/db/mongoose')
+    const userRouter = require('./src/routers/conference')
+const taskRouter = require('./src/routers/task')
+
 const port = 3001;
 
 const app=express();
@@ -28,6 +32,8 @@ app.use('/css', express.static(path.join(__dirname, 'client/css')));
 //restfull 
 //app.use(cors());
 app.use(express.json());
+app.use(userRouter)
+app.use(taskRouter)
 app.use(express.urlencoded({ extended: true }));
 
 //app.use('/', routers);

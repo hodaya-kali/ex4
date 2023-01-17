@@ -16,7 +16,7 @@ router.post('/conference', (req, res) => {
     }
 });
 
-router.get('/conference', (req, res) => {
+router.get('/conferences', (req, res) => {
     Conference.find().then(conference =>
         res.send(conference)
     ).catch(e => res.status(500).send())
@@ -215,6 +215,6 @@ function putValidation(req,res){
       });
       if(!isReqValid){
           console.log('res with error');
-          return false;
+          return;
       }
 }

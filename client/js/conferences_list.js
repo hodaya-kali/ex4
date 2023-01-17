@@ -186,13 +186,11 @@ function get_conferences() {
     console.log("get");
     $.ajax({
         type: "GET",
-        url: "http://localhost:3001/conference",
+        url: "http://localhost:3001/conferences",
         success: function (data) {
-            console.log("success");
             show_conferences(data);
         },
         error: function (data) {
-            console.log("error");
             alert(data);
         },
     });
@@ -311,7 +309,6 @@ if(lectureDetails[2]!=null)
                     // mylist.append("<br>");
                     // mylist.append($("<tr></tr>"));
             for (i in data[val]) {
-                      
                 mylist.append($("<tr></tr>"));
 
                 mylist.append($("<tr></tr>"));
@@ -372,6 +369,7 @@ if(lectureDetails[2]!=null)
 // the front-end side --> show the list, add buttons & listeners
 //--------------------------------------------------------
 function show_conferences(data) {
+    console.log("bigotybioty"+data);
     $("table").remove(); // remove the previous elements
     if (is_sort_by_date) {
         data = sort_by_date(data);
@@ -379,6 +377,7 @@ function show_conferences(data) {
         data = sort_by_name(data);
     }
     let index_conference=0;
+   
     for (val in data) {
         // add table, and generic buttons for each conference
         var mylist = $("<table></table>");
@@ -387,7 +386,7 @@ function show_conferences(data) {
         index_conference++;
         mylist.append("<strong class='color'>:</strong>");
         mylist.append("<br>");
-        mylist.append($("<tr></tr>"));
+        // mylist.append($("<tr></tr>"));
         var button5 = $(
             '<button type="button" id="open_edit_' +
                 data[val].id +
@@ -413,7 +412,7 @@ function show_conferences(data) {
         );
         mylist.append(button2);
         var input = $(
-            '<input class="in form-control" id="in' +
+            '<input class="in form-control" id="in'+
                 data[val].id +
                 '" type="input" placeholder="lecture name...">'
         );
@@ -454,34 +453,62 @@ function show_conferences(data) {
                     Object.keys(data[val])
                         .map((key, index) => {
                             if (key === "series_number")
+                                // mylist.append(
+                                //     $("<td></td>").text(data[val][key])
+                                // );
                                 mylist.append(
-                                    $("<td></td>").text(data[val][key])
+                                    $("<th></th>").text(data[val][key])
                                 );
+                                mylist.append($("<tr></tr>"));
                         })
                         .join(" ");
                     break;
                 }
-            } else {
-                mylist.append($("<th></th>").text(i));
-            }
-
-            if (data[val][i] == data[val].logo_picture) {
-                mylist.append('<img src="' + data[val][i] + '">');
-                continue;
-            }
+            } 
             if (i == "isSeries") {
                 break;
             } else {
-                mylist.append($("<td></td>").text(data[val][i])); /**/
+                Object.keys(data[val])
+                .map((key, index) => {
+                      // ignore the mongo information
+            if (key!="_id" && key!="createdAt" &&
+                key!="updatedAt" && key!="__v") {
+                    if(!(key==="series_number"&&data[val][key]<2))
+                    {
+                        if (key === "imageUrl") {
+                            mylist.append('<img src="' + data[val][key] + '">');
+
+                        }
+                        else{
+                        mylist.append($("<th></th>").text(key));
+                        // mylist.append($("<tr></tr>"));
+                            mylist.append(
+                                $("<td></td>").text(data[val][key])
+                            );
+                            
+                            var input = $(
+                                '<input class="in form-control" id="in'+
+                                    Object.values(data)._id+ 
+                                    '" type="input" placeholder="lecture name...">'
+                            );
+                            mylist.append(input);
+                        }
+                        mylist.append($("<tr></tr>"));
+                      
+                    }
+            }     
+                })
             }
         }
-        // add space between artists
+        // add space between conference
         mylist.append($("<tr></tr>"));
         mylist.append("<br>");
         mylist.append("<div id = 'lecturesList'></div>");
         mylist.append("<tr><tr>");
         mylist.appendTo($("#conferences_list"));
-        $("#in" + data[val].id).hide();
+        // $("#in" + data[val].id).hide();
+        console.log("kkkkk"+ Object.values(data)._id);
+          $("#in" + Object.values(data)._id).hide();
         $("#photo_of_a_lecturer" + data[val].id).hide();
         $("#lecturer_website" + data[val].id).hide();
         $(".submit_add_lecture").hide();
