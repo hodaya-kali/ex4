@@ -5,7 +5,7 @@ const express = require('express'),
     //routers = require('./server/routes/routes.js');
     require('./src/db/mongoose')
     const userRouter = require('./src/routers/conference')
-const taskRouter = require('./src/routers/task')
+const taskRouter = require('./src/routers/lecture')
 
 const port = 3001;
 

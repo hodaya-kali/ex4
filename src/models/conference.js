@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
+const id_validator = require ('mongoose-id-validator');
 const isUrl = require('validator/lib/isURL'); // This is an external module which can be installed via npm
 
 var ConferenceSchema = new mongoose.Schema({
@@ -88,10 +89,15 @@ isSeries: {
       },
       message: props => `${props.value} is not a valid value for isSeries field!`
   }
-}
-
-}, { timestamps: true }
-);
+},
+ 
+    author: { type: mongoose.Schema.Types.ObjectId,
+         ref: 'Lecture',required:true},
+  }, 
+  { timestamps: true });
+  LectureSchema.plugin(id_validator);
+  LectureSchema.index("completed");
+  
 
 const Conference = mongoose.model('Conference', ConferenceSchema);
 

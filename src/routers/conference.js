@@ -3,7 +3,37 @@ const Conference = require('../models/conference');
 // const User = require('../models/user')
 const router = new express.Router()
 
-router.post('/conference', (req, res) => {
+
+
+    router.put('/conferences/lecture/:id', (req, res) => {
+    })
+
+//get conference by id
+router.get('/conferences/:id', (req, res) => {
+    Conference.findById(req.params.id).then(conference => {
+        if (!conference) {
+             res.status(404).send()
+             return false;
+        } 
+        else {
+            res.send(conference)
+        }
+    }).catch(e => res.status(400).send(e))
+})
+
+router.delete('/conferences/:id', (req, res) => {
+    Conference.findOneAndRemove(req.params.id).then(conference => {
+        if (!conference) {
+             res.status(404).send("conference does not exist")
+             return false;
+        } 
+        else {
+            res.status(200).send("conference deleted");
+        }
+    }).catch(e => res.status(400).send(e))
+})
+
+router.post('/conferences', (req, res) => {
     if(validateFields(req,res))
     {
         const conference = new Conference(req.body)
@@ -45,6 +75,9 @@ router.put('/conferences/:id', async (req, res) => {
         }
     }).catch(e => res.status(400).send(e))
 })
+
+
+
 
 module.exports = router
 
