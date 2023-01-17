@@ -23,21 +23,24 @@ router.get('/conference', (req, res) => {
 })
 
 router.put('/conferences/:id', async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'imageUrl', 'director', 'date','isSeries','series_number']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-    if (!isValidOperation) {
-         res.status(400).send({ error: 'Invalid updates!' })
-         return false;
-    }
+    // const updates = Object.keys(req.body)
+    // const allowedUpdates = ['name', 'imageUrl', 'director', 'date','isSeries','series_number']
+    // const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+    // if (!isValidOperation) {
+    //      res.status(400).send({ error: 'Invalid updates!' })
+    //      return false;
+    // }
+    if(!putValidation)
 
-    Conference.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true }).then(conference => {
+    {
+        return;
+    }
+    Conference.findByIdAndUpdate(req.params.id, req.body, { new: true}).then(conference => {
         if (!conference) {
              res.status(404).send()
              return false;
-        }
+        } 
         else {
-            console.log(conference)
             res.send(conference)
         }
     }).catch(e => res.status(400).send(e))
@@ -99,18 +102,6 @@ function validateFields(req,res){
         }
        
     }
-    //TODO check if the conference is already exist
-    // Conference.countDocuments({ id: req.body.id })
-    //         .then(count => {
-    //             if (count > 0) {
-    //                  res.status(400).send("Conference already exists");
-    //                  return false;
-    //             } 
-    // else {
-    //              return true;
-    //             }
-    //         }).catch(e => res.status(400).send(e))
- 
                      return true
 }
 
@@ -127,18 +118,16 @@ function putValidation(req,res){
     //       return res.status(400).send("conference id not exist");
     //   }
       // if isSeries changed from fals to true series_number is required
-    //   if (
-    //       !data[conferenceId].isSeries &&
-    //       req.body.isSeries &&
-    //       !req.body.series_number
-    //   ) 
-    //   {
-    //       console.log();
-
-    //       return res
-    //           .status(400)
-    //           .send(" a series conference must include a serial number");
-    //   }
+      //TODO if isseries is strings
+      if (
+          req.body.isSeries &&
+          !req.body.series_number 
+      ) 
+      {
+          return res
+              .status(400)
+              .send(" a series conference must include a serial number");
+      }
       if(req.body.isSeries && req.body.series_numbe < 2){
           console.log("a series conference must be a number bigger than 1");
 
@@ -148,30 +137,29 @@ function putValidation(req,res){
                   " a series conference must be a number bigger than 1"
               );
       }
-    //   if (
-    //       req.body.isSeries &&
-    //       typeof req.body.series_number === "number" &&
-    //       req.body.series_numbe < 2
-    //   ) {
-    //       console.log("a series conference must be a number bigger than 1");
+      if (
+          req.body.isSeries &&
+          typeof req.body.series_number === "number" &&
+          req.body.series_numbe < 2
+      ) {
+          console.log("a series conference must be a number bigger than 1");
 
-    //       return res
-    //           .status(400)
-    //           .send(
-    //               " a series conference must be a number bigger than 1"
-    //           );
-    //   }
+          return res
+              .status(400)
+              .send(
+                  " a series conference must be a number bigger than 1"
+              );
+      }
 
-    //   const fieldsEntered = Object.keys(req.body);
-    //   const legalFields = {
-    //       id: "string",
-    //       name: "string",
-    //       logo_picture: "string",
-    //       director: "string",
-    //       date: "string",
-    //       isSeries: "boolean",
-    //       series_number: "number",
-    //   };
+      const fieldsEntered = Object.keys(req.body);
+      const legalFields = {
+          name: "string",
+          imageUrl: "string",
+          director: "string",
+          date: "string",
+          isSeries: "boolean",
+          series_number: "number",
+      };
 
       const isReqValid = fieldsEntered.every((enteredKey) => {
     //       if(enteredKey === 'id'){
@@ -184,25 +172,25 @@ function putValidation(req,res){
                   .send(`the field ${enteredKey} is not legal`);
                   return false;
           }
-        //   if (typeof req.body[enteredKey] != legalFields[enteredKey]) {
-        //        res
-        //       .status(400)
-        //       .send(`the type of field ${enteredKey} is not legal`);
-        //       return false;
-        //   }
-        //   const urlRegex =
-        //       /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
-        //   if (
-        //       enteredKey === "logo_picture" &&
-        //       req.body.logo_picture &&
-        //       !urlRegex.test(req.body.logo_picture)
-        //   ) {
-        //       console.log(enteredKey, urlRegex.test(req.body.logo_picture));
-        //       res
-        //       .status(400)
-        //       .send(`the field ${enteredKey} must be a valid URL`);
-        //       return false
-        //   }
+          if (typeof req.body[enteredKey] != legalFields[enteredKey]) {
+               res
+              .status(400)
+              .send(`the type of field ${enteredKey} is not legal`);
+              return false;
+          }
+          const urlRegex =
+              /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+          if (
+              enteredKey === "imageUrl" &&
+              req.body.imageUrl &&
+              !urlRegex.test(req.body.imageUrl)
+          ) {
+              console.log(enteredKey, urlRegex.test(req.body.imageUrl));
+              res
+              .status(400)
+              .send(`the field ${enteredKey} must be a valid URL`);
+              return false
+          }
           //check if entered date is valid
           if (
               enteredKey === "date" &&
@@ -218,18 +206,15 @@ function putValidation(req,res){
           //req.body[enteredKey] 
           if ( req.body[enteredKey]!==undefined &&  req.body[enteredKey]!== "") {
               console.log(`${enteredKey} assigned to ${req.body[enteredKey]}`);
-              data[conferenceId][enteredKey] = req.body[enteredKey];
+            //   data[conferenceId][enteredKey] = req.body[enteredKey];
               return true;
-          }else{
+          }
+          else{
               return true;
           }
       });
       if(!isReqValid){
           console.log('res with error');
-          return;
+          return false;
       }
-      writeFile(JSON.stringify(data, null, 2), () => {
-          console.log('res 200');
-          res.status(200).send(`users id:${conferenceId} updated`);
-      });
 }

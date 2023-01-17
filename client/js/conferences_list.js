@@ -183,13 +183,16 @@ function addConference(conferenceDetails) {
 // send GET request to get the conference list (sorted)
 //--------------------------------------------------------
 function get_conferences() {
+    console.log("get");
     $.ajax({
         type: "GET",
-        url: "http://localhost:3000/conferences",
+        url: "http://localhost:3001/conference",
         success: function (data) {
+            console.log("success");
             show_conferences(data);
         },
         error: function (data) {
+            console.log("error");
             alert(data);
         },
     });
