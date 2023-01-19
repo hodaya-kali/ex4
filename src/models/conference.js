@@ -14,6 +14,17 @@ var ConferenceSchema = new mongoose.Schema({
           message: props => `${props.value} is not a valid ID!`
         },
     },
+    
+    id: {
+      type: Number,
+      required: true,
+      trim: true,
+      validate(value) {
+          if (value < 0) {
+              throw new Error('invalid id')
+          }
+      }
+  },
     name: {
         type: String,
         required: true,
@@ -91,12 +102,12 @@ isSeries: {
   }
 },
  
-    author: { type: mongoose.Schema.Types.ObjectId,
-         ref: 'Lecture',required:true},
+    lectures: [{ type: mongoose.Schema.Types.ObjectId,
+         ref: 'Lecture'}],
   }, 
   { timestamps: true });
-  LectureSchema.plugin(id_validator);
-  LectureSchema.index("completed");
+  ConferenceSchema.plugin(id_validator);
+  ConferenceSchema.index("completed");
   
 
 const Conference = mongoose.model('Conference', ConferenceSchema);

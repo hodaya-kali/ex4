@@ -38,8 +38,8 @@ site: {
     //      ref: 'Conference',required:true},
  }, 
 { timestamps: true });
-LectureSchema.plugin(id_validator);
-LectureSchema.index("completed");
+// LectureSchema.plugin(id_validator);
+// LectureSchema.index("completed");
 
 
 const Lecture = mongoose.model('Lecture', LectureSchema );
