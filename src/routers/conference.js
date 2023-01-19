@@ -39,6 +39,37 @@ router.get('/conferences/:id', (req, res) => {
     }).catch(e => res.status(400).send(e))
 })
 
+
+router.delete('/conferences/:id/lectures/:letureId', (req, res) => {
+    const conferenceId = req.params['id'];
+    const lecture = req.params['letureId']; 
+        Conference.findById(conferenceId, (err, conference) => {
+            if (!conference) {
+                res.status(404).send("conference does not exist")
+                return false;
+           } 
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                const lectureIndex = conference.lectures.findIndex(lecture => lecture._id == lecture);
+                if (lectureIndex < 0) {
+                    res.status(404).send("Lecture not found");
+                    return false;
+                }
+                conference.lectures.splice(lectureIndex, 1);
+                isExist = true;
+                conference.save((err, updatedConference) => {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        res.send({ message: 'Lecture deleted from conference' });
+                    }
+                });
+            }
+        });
+
+})
+
 router.delete('/conferences/:id', (req, res) => {
     Conference.findOneAndRemove(req.params.id).then(conference => {
         if (!conference) {
