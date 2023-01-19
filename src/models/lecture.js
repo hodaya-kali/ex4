@@ -26,12 +26,7 @@ var LectureSchema = new mongoose.Schema({
 
 site: {
         type: String,
-        validate: {
-            validator: function(value) {
-                return validator.isURL(value);
-            },
-            message: '{VALUE} is not a valid url'
-        }
+
     },
  
     // author: { type: mongoose.Schema.Types.ObjectId,

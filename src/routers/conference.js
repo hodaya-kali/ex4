@@ -5,9 +5,9 @@ const router = new express.Router()
 
 
 //add a lecture to a conference, There is no need of validation checking because we enter just a lecture that already in the collection.
-    router.put('/conferences/:id/lectures', (req, res) => {
-    const conferenceId = req.params['id'];
-    const lecture =  req.body.lecturerId;
+    router.put('/conferences/:id/lectures/:lectureId', (req, res) => {
+     const conferenceId = req.params['id'];
+    const lecture =  req.params['lectureId'];
     
     Conference.findOne({ _id: conferenceId }).exec().then(conference => {
         if (!conference) {
@@ -40,9 +40,9 @@ router.get('/conferences/:id', (req, res) => {
 })
 
 
-router.delete('/conferences/:id/lectures/:letureId', (req, res) => {
+router.delete('/conferences/:id/lectures', (req, res) => {
     const conferenceId = req.params['id'];
-    const lecture = req.params['letureId']; 
+    // const lecture = req.params['letureId']; 
         Conference.findById(conferenceId, (err, conference) => {
             if (!conference) {
                 res.status(404).send("conference does not exist")
@@ -51,12 +51,12 @@ router.delete('/conferences/:id/lectures/:letureId', (req, res) => {
             if (err) {
                 res.status(500).send(err);
             } else {
-                const lectureIndex = conference.lectures.findIndex(lecture => lecture._id == lecture);
-                if (lectureIndex < 0) {
-                    res.status(404).send("Lecture not found");
-                    return false;
-                }
-                conference.lectures.splice(lectureIndex, 1);
+                // const lectureIndex = conference.lectures.findIndex(lecture => lecture._id == lecture);
+                // if (lectureIndex < 0) {
+                //     res.status(404).send("Lecture not found");
+                //     return false;
+                // }
+                 conference.lectures=[];
                 isExist = true;
                 conference.save((err, updatedConference) => {
                     if (err) {
@@ -83,11 +83,12 @@ router.delete('/conferences/:id', (req, res) => {
 })
 
 router.post('/conferences', (req, res) => {
-     let check = validateFields(req,res);
-     if(check)
+      let check = validateFields(req,res);
+      if(check)
     {
         console.log(req.body);
         const conference = new Conference(req.body)
+        console.log(conference);
         conference.save().then(conference => {
             console.log("in then - save");
             res.status(201).send(conference)
@@ -151,7 +152,8 @@ function validateFields(req,res){
                 if (!req.body.isSeries && i == 6) {
                     console.log("bhubufr");
                     break;
-                } else {
+                } 
+                else {
                     console.log("else");
                     console.log(req.body.isSeries);
                      res.status(400).send("missing field");
@@ -176,12 +178,12 @@ function validateFields(req,res){
                     return false;
             }
         } 
-        else {
-            if(Object.keys(req.body).length>6)
-            {
-                req.body.series_number=1;
-            }
-        }
+        // else {
+        //     if(Object.keys(req.body).length>6)
+        //     {
+        //         req.body.series_number=1;
+        //     }
+        // }
         return true;
 }
 

@@ -78,17 +78,10 @@ var ConferenceSchema = new mongoose.Schema({
     }
 },
 
-// date: {
-//   type: String,
-//   required: true,
-//   validate: {
-//       validator: function(v) {
-//           const date = validator.toDate(v, 'DD.MM.YYYY')
-//           return date != "Invalid Date" && validator.isAfter(date, new Date()) || validator.isEqual(date, new Date())
-//       },
-//       message: props => `${props.value} is not a valid date or not greater than or equal current date!`
-//   }
-// },
+date: {
+  type: String,
+  required: true
+},
 
 isSeries: {
   type: Boolean,

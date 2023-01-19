@@ -10,6 +10,7 @@ router.post('/lectures', (req, res) => {
         return false;
     }
     const lecture = new Lecture(req.body);
+    console.log(lecture);
     lecture.save().then(lecture=>
         res.status(201).send(lecture)
     ).catch(e=>res.status(400).send(e))
@@ -21,6 +22,32 @@ router.post('/lectures', (req, res) => {
 // })
 
 function putValidation(req, res) {
+
+    var inputValue =req.body.site;
+    if(inputValue!=""){
+try {
+ var url = new URL(inputValue);
+ // the value is a valid URL
+} catch (e) {
+ alert("the value in lecture website is not a valid URL");
+ res
+ .status(400)
+ .send(`the field url must be a valid URL`);
+ return false
+ // the value is not a valid URL
+}}
+
+
+    const urlRegex =
+              /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+          if (
+              !urlRegex.test(req.body.imageUrl)
+          ) {
+              res
+              .status(400)
+              .send(`the field url must be a valid URL`);
+              return false
+          }
     // add the new conference
     // const userName = req.params["name"];
     const userName = req.body.name;
